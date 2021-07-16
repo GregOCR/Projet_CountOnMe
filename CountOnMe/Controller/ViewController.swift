@@ -10,12 +10,12 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak internal var textView: UITextView!
     
-    @IBOutlet var numberButtons: [UIButton]!
-    @IBOutlet var operandButtons: [UIButton]!
+    @IBOutlet internal var numberButtons: [UIButton]!
+    @IBOutlet internal var operandButtons: [UIButton]!
     
-    @IBOutlet weak var gestureCEACButton: UIButton!
+    @IBOutlet weak internal var gestureCEACButton: UIButton!
     
     enum Button {
         case operands, equal
@@ -31,7 +31,19 @@ class ViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
+//    private var expressionElements: [String] {
+//        return self.expression.split(separator: " ").map { "\($0)" }
+//    }
+//
+//    private var currentSequence: String {
+//        return self.expressionElements.last!
+//    }
+//
+//    private var expressionHasEnoughElements: Bool {
+//        return self.expressionElements.count > 2
+//    }
+    
+    override internal func viewDidLoad() {
         super.viewDidLoad()
         
         calc.delegate = self // Calc class delegate
@@ -44,24 +56,24 @@ class ViewController: UIViewController {
         self.gestureCEACButton.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedACCEButton)))
     }
     
-    override func viewDidLayoutSubviews() {
+    override internal func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         self.textView.scrollToBottom() // security of scroll textView's text to bottom due to update bug
     }
     
-    @objc func tappedScreenDisplay(sender: UITapGestureRecognizer) {
-        if calc.getCurrentSequence().containsResult() {
-            copyResultInClipboard()
+    @objc internal func tappedScreenDisplay(sender: UITapGestureRecognizer) {
+        if self.expression.containsResult() {
+            copyExpressionInClipboard()
             expressionCopiedAlertMessage()
         }
     }
     
-    @objc func tappedCEACButton(sender: UITapGestureRecognizer) {
-        if calc.getCurrentSequence().containsResult() {
+    @objc internal func tappedCEACButton(sender: UITapGestureRecognizer) {
+        if self.expression.containsResult() {
             Vibration.For.acResetButton.perform()
             calc.resetExpression()
         } else {
-            if !calc.getExpressionElements().isLenghtedOne() {
+            if !self.expression.elements().isLenghtOne() {
                 Vibration.For.ceClearButton.perform()
                 calc.deleteLastSequence()
             } else {
@@ -71,41 +83,41 @@ class ViewController: UIViewController {
         }
     }
     
-    @objc func longPressedACCEButton(sender: UILongPressGestureRecognizer) {
+    @objc internal func longPressedACCEButton(sender: UILongPressGestureRecognizer) {
         Vibration.For.acResetButton.perform()
         calc.resetExpression()
     }
     
-    @IBAction func tappedNumberButton(_ sender: UIButton) {
+    @IBAction internal func tappedNumberButton(_ sender: UIButton) {
         Vibration.For.numbersAndDotButtons.perform()
 
         guard let entry = sender.title(for: .normal) else {
             return
         }
-        calc.addToExpression(entry)
+        calc.addNumberOrDotToExpression(entry)
     }
     
-    @IBAction func tappedAdditionButton(_ sender: UIButton) {
+    @IBAction internal func tappedAdditionButton(_ sender: UIButton) {
         Vibration.For.operandsButtons.perform()
-        calc.addOperand(sender.title(for: .normal)!)
+        calc.addOperandToExpression(sender.title(for: .normal)!)
     }
     
-    @IBAction func tappedMultiplicationButton(_ sender: UIButton) {
+    @IBAction internal func tappedMultiplicationButton(_ sender: UIButton) {
         Vibration.For.operandsButtons.perform()
-        calc.addOperand(sender.title(for: .normal)!)
+        calc.addOperandToExpression(sender.title(for: .normal)!)
     }
     
-    @IBAction func tappedDivisionButton(_ sender: UIButton) {
+    @IBAction internal func tappedDivisionButton(_ sender: UIButton) {
         Vibration.For.operandsButtons.perform()
-        calc.addOperand(sender.title(for: .normal)!)
+        calc.addOperandToExpression(sender.title(for: .normal)!)
     }
     
-    @IBAction func tappedSubstractionButton(_ sender: UIButton) {
+    @IBAction internal func tappedSubstractionButton(_ sender: UIButton) {
         Vibration.For.operandsButtons.perform()
-        calc.addOperand(sender.title(for: .normal)!)
+        calc.addOperandToExpression(sender.title(for: .normal)!)
     }
     
-    @IBAction func tappedEqualButton(_ sender: UIButton) {
+    @IBAction internal func tappedEqualButton(_ sender: UIButton) {
         Vibration.For.equalButton.perform()
         calc.resolveExpression()
     }
@@ -115,13 +127,13 @@ class ViewController: UIViewController {
         buttonAvailability(type: .equal, visibility: true)
         changeCEACbuttonTextTo("CE / AC")
         
-        if calc.getCurrentSequence().isFloatZero() || calc.getCurrentSequence().containsResult() {
+        if self.expression.currentSequence().isFloatZero() || self.expression.containsResult() {
             buttonAvailability(type: .operands, visibility: false)
         }
-        if !calc.expressionHasEnoughElements && !calc.getCurrentSequence().containsResult() || calc.getCurrentSequence().isOperand()  {
+        if !self.expression.hasEnoughElementsToResolve() && !self.expression.containsResult() || self.expression.currentSequence().isOperand()  {
             buttonAvailability(type: .equal, visibility: false)
         }
-        if calc.getCurrentSequence().containsResult() {
+        if self.expression.containsResult() {
             changeCEACbuttonTextTo("AC")
         }
     }
@@ -148,13 +160,13 @@ class ViewController: UIViewController {
         }
     }
     
-    private func copyResultInClipboard() {
-        UIPasteboard.general.string = calc.getExpression()
+    private func copyExpressionInClipboard() {
+        UIPasteboard.general.string = self.expression
     }
 }
 
 extension ViewController: CalcDelegate {
-    func updateDataScreenCalculator() {
+    internal func updateDataScreenCalculator() {
         self.expression = calc.getExpression()
     }
 }

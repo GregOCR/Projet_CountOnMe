@@ -14,7 +14,7 @@ protocol CalcDelegate: AnyObject {
 
 class Calc {
         
-    weak var delegate: CalcDelegate?
+    weak internal var delegate: CalcDelegate?
     
     private let operandsWithPriorities = ["÷", "×", "−", "+"]
     
@@ -23,40 +23,20 @@ class Calc {
             self.sendDataScreenCalculator()
         }
     }
-        
-    private var expressionElements: [String] {
-        return self.expression.split(separator: " ").map { "\($0)" }
-    }
-    
-    private var currentSequence: String {
-        return self.expressionElements.last!
-    }
-    
-    public var expressionHasEnoughElements: Bool {
-        return self.expressionElements.count > 2
-    }
-    
-    public func getExpression() -> String {
+
+    internal func getExpression() -> String {
         return self.expression
     }
     
-    public func getExpressionElements() -> [String] {
-        return self.expressionElements
-    }
-    
-    public func getCurrentSequence() -> String {
-        return self.currentSequence
-    }
-    
-    public func addToExpression(_ entry: String) {
-        if currentSequence.containsResult() {
+    internal func addNumberOrDotToExpression(_ entry: String) {
+        if self.expression.containsResult() {
             resetExpression()
         }
         if entryIsAllowedToBeAddedToExpression(with: entry) {
-            if entry.isOperand() && currentSequence.isOperand() {
+            if entry.isOperand() && self.expression.currentSequence().isOperand() {
                 self.expression = String(self.expression.dropLast(3))
             }
-            if !entry.isDot() && currentSequence.isStringZero() {
+            if !entry.isDot() && self.expression.currentSequence().isStringZero() {
                 self.expression = String(self.expression.dropLast() + entry)
                 return
             }
@@ -64,23 +44,23 @@ class Calc {
         }
     }
     
-    public func addOperand(_ operand: String) {
+    internal func addOperandToExpression(_ operand: String) {
         avoidZerosAndPointAtEndOfSequence()
-        addToExpression(" \(operand) ")
+        addNumberOrDotToExpression(" \(operand) ")
     }
     
-    public func deleteLastSequence() {
-        var droplastRange = currentSequence.count
-        if currentSequence.isOperand() {
+    internal func deleteLastSequence() {
+        var droplastRange = self.expression.currentSequence().count
+        if self.expression.currentSequence().isOperand() {
             droplastRange = 3
         }
         self.expression = String(self.expression.dropLast(droplastRange))
     }
     
-    public func resolveExpression() {
+    internal func resolveExpression() {
         avoidZerosAndPointAtEndOfSequence()
 
-        var expressionToResolve = expressionElements // Create a local copy of expression's elements
+        var expressionToResolve = expression.elements() // Create a local copy of expression's elements
 
         while expressionToResolve.count != 1 { // while expression isn't counting 1 ...
             for operandIndex in 0...operandsWithPriorities.count-1 { // calculate it in the priority of operands
@@ -105,16 +85,16 @@ class Calc {
                 }
             }
         }
-        addToExpression("\r=\r\(NSNumber(value: Double(expressionToResolve.first!)!).decimalValue)")
+        addNumberOrDotToExpression(" \r=\r \(NSNumber(value: Double(expressionToResolve.first!)!).decimalValue)")
     }
     
-    public func resetExpression() {
+    internal func resetExpression() {
         self.expression = "0"
     }
     
     private func avoidZerosAndPointAtEndOfSequence() {
-        if currentSequence.containsDot() {
-            var currentSequenceComponents = currentSequence.components(separatedBy: ".")
+        if self.expression.currentSequence().containsDot() {
+            var currentSequenceComponents = self.expression.currentSequence().components(separatedBy: ".")
             var numberOfCharactersToDelete = 0
             while currentSequenceComponents[1].last == "0" { // while a zero is at the end of the sequence after the dot
                 numberOfCharactersToDelete += 1 // count a character to delete
@@ -129,7 +109,7 @@ class Calc {
     
     private func entryIsAllowedToBeAddedToExpression(with entry: String) -> Bool {
         var result = true
-        if entry.isStringZero() && currentSequence.isStringZero() || entry.isDot() && (currentSequence.containsDot() || currentSequence.isOperand()) {
+        if entry.isStringZero() && self.expression.currentSequence().isStringZero() || entry.isDot() && (self.expression.currentSequence().containsDot() || self.expression.currentSequence().isOperand()) {
             result = false
         }
         return result

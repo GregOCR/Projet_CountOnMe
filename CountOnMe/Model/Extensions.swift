@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIView {
-    func shake() {
+    internal func shake() {
         let animation = CABasicAnimation(keyPath: "position")
         animation.duration = 0.05
         animation.repeatCount = 3
@@ -21,34 +21,34 @@ extension UIView {
 }
 
 extension UITextView {
-    func scrollToBottom() {
+    internal func scrollToBottom() {
         self.scrollRangeToVisible(NSMakeRange(self.text.count - 1, 1))
     }
 }
 
 extension String {
-    func isStringZero() -> Bool {
+    internal func isStringZero() -> Bool {
         var result = false
         if self == "0" {
             result = true
         }
         return result
     }
-    func isFloatZero() -> Bool {
+    internal func isFloatZero() -> Bool {
         var result = false
         if Float(self) == 0 {
             result = true
         }
         return result
     }
-    func isDot() -> Bool {
+    internal func isDot() -> Bool {
         var result = false
         if self == "." {
             result = true
         }
         return result
     }
-    func isOperand() -> Bool {
+    internal func isOperand() -> Bool {
         var result = false
         let operands = ["÷", "×", "−", "+"]
         operands.forEach {
@@ -59,19 +59,28 @@ extension String {
         }
         return result
     }
-    func isLenghtedOne() -> Bool {
+    internal func isLenghtOne() -> Bool {
         return self.count == 1
     }
-    func containsDot() -> Bool {
+    internal func containsDot() -> Bool {
         return self.contains(".")
     }
-    func containsResult() -> Bool {
+    internal func containsResult() -> Bool {
         return self.contains("=")
+    }
+    internal func elements() -> [String] {
+        return self.split(separator: " ").map { "\($0)" }
+    }
+    internal func currentSequence() -> String {
+        return self.elements().last!
+    }
+    internal func hasEnoughElementsToResolve() -> Bool {
+        return self.elements().count > 2
     }
 }
 
 extension Array where Element == String {
-    func isLenghtedOne() -> Bool {
+    internal func isLenghtOne() -> Bool {
         return self.count == 1
     }
 }
