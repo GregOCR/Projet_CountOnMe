@@ -28,7 +28,8 @@ class Calc {
         return self.expression
     }
     
-    internal func addNumberOrDotToExpression(_ entry: String) {
+    internal func addToExpression(_ entry: String) {
+        var verifiedEntry = entry
         if self.expression.containsResult() {
             resetExpression()
         }
@@ -40,15 +41,14 @@ class Calc {
                 self.expression = String(self.expression.dropLast() + entry)
                 return
             }
-            self.expression.append(entry)
+            if entry.isOperand() {
+                avoidZerosAndPointAtEndOfSequence()
+                verifiedEntry = " \(entry) "
+            }
+            self.expression.append(verifiedEntry)
         }
     }
-    
-    internal func addOperandToExpression(_ operand: String) {
-        avoidZerosAndPointAtEndOfSequence()
-        addNumberOrDotToExpression(" \(operand) ")
-    }
-    
+        
     internal func deleteLastSequence() {
         var droplastRange = self.expression.currentSequence().count
         if self.expression.currentSequence().isOperand() {
@@ -85,7 +85,7 @@ class Calc {
                 }
             }
         }
-        addNumberOrDotToExpression(" \r=\r \(NSNumber(value: Double(expressionToResolve.first!)!).decimalValue)")
+        addToExpression("\r=\r\(NSNumber(value: Double(expressionToResolve.first!)!).decimalValue)")
     }
     
     internal func resetExpression() {

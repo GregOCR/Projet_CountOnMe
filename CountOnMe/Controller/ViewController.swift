@@ -90,31 +90,18 @@ class ViewController: UIViewController {
     
     @IBAction internal func tappedNumberButton(_ sender: UIButton) {
         Vibration.For.numbersAndDotButtons.perform()
-
         guard let entry = sender.title(for: .normal) else {
             return
         }
-        calc.addNumberOrDotToExpression(entry)
+        calc.addToExpression(entry)
     }
     
-    @IBAction internal func tappedAdditionButton(_ sender: UIButton) {
+    @IBAction internal func tappedOperandButton(_ sender: UIButton) {
         Vibration.For.operandsButtons.perform()
-        calc.addOperandToExpression(sender.title(for: .normal)!)
-    }
-    
-    @IBAction internal func tappedMultiplicationButton(_ sender: UIButton) {
-        Vibration.For.operandsButtons.perform()
-        calc.addOperandToExpression(sender.title(for: .normal)!)
-    }
-    
-    @IBAction internal func tappedDivisionButton(_ sender: UIButton) {
-        Vibration.For.operandsButtons.perform()
-        calc.addOperandToExpression(sender.title(for: .normal)!)
-    }
-    
-    @IBAction internal func tappedSubstractionButton(_ sender: UIButton) {
-        Vibration.For.operandsButtons.perform()
-        calc.addOperandToExpression(sender.title(for: .normal)!)
+        guard let entry = sender.title(for: .normal) else {
+            return
+        }
+        calc.addToExpression(entry)
     }
     
     @IBAction internal func tappedEqualButton(_ sender: UIButton) {
