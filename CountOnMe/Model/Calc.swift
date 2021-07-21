@@ -13,7 +13,7 @@ protocol CalcDelegate: AnyObject {
 }
 
 class Calc {
-        
+    
     weak internal var delegate: CalcDelegate?
     
     private let operandsWithPriorities = ["÷", "×", "−", "+"]
@@ -23,7 +23,7 @@ class Calc {
             self.sendDataScreenCalculator()
         }
     }
-
+    
     internal func getExpression() -> String {
         return self.expression
     }
@@ -48,7 +48,7 @@ class Calc {
             self.expression.append(verifiedEntry)
         }
     }
-        
+    
     internal func deleteLastSequence() {
         var droplastRange = self.expression.currentSequence().count
         if self.expression.currentSequence().isOperand() {
@@ -59,9 +59,9 @@ class Calc {
     
     internal func resolveExpression() {
         avoidZerosAndPointAtEndOfSequence()
-
-        var expressionToResolve = expression.elements() // Create a local copy of expression's elements
-
+        
+        var expressionToResolve = expression.elements() // create a local copy of expression's elements
+        
         while expressionToResolve.count != 1 { // while expression isn't counting 1 ...
             for operandIndex in 0...operandsWithPriorities.count-1 { // calculate it in the priority of operands
                 while (expressionToResolve.firstIndex(of: operandsWithPriorities[operandIndex]) != nil) {

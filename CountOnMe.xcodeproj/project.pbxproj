@@ -96,9 +96,9 @@
 		3715291C268C9BD200A1AEF8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				37EB7A7626935E3B00C2239D /* Vibration.swift */,
 				37EB7A84269499A500C2239D /* Calc.swift */,
 				37EB7A862695A73A00C2239D /* Extensions.swift */,
+				37EB7A7626935E3B00C2239D /* Vibration.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -134,8 +134,8 @@
 		37C73DFD26A0879600B92F82 /* CountOnMeTests */ = {
 			isa = PBXGroup;
 			children = (
-				37C73E0026A0879600B92F82 /* Info.plist */,
 				37C73E0626A087F600B92F82 /* CalcTestCase.swift */,
+				37C73E0026A0879600B92F82 /* Info.plist */,
 			);
 			path = CountOnMeTests;
 			sourceTree = "<group>";

@@ -20,50 +20,44 @@ class CalcTestCase: XCTestCase {
     
     func addingToExpression(_ entries: String) {
         let splitEntries = entries.split(separator: " ").map { "\($0)" }
-        print(splitEntries)
         splitEntries.forEach( { calc.addToExpression($0) } )
     }
 
-    
     // tests multiple zero entries to not reiterate when is first number of a sequence
-    func testGivenExpressionIsStarting_WhenEntriesAreZeroZeroZero_ThenExpressionIsZero() {
+    func testMultipleZeroEntries() {
         // When
         addingToExpression("0 0 0")
         // Then
         XCTAssert(calc.getExpression() == "0")
     }
     // tests multiple dot entries to not reiterate when already exists in a sequence
-    func testGivenExpressionIsStarting_WhenEntriesAreDotDotDot_ThenExpressionIsZeroDot() {
+    func testMultipleDotEntries() {
         // When
         addingToExpression(". . .")
         // Then
         XCTAssert(calc.getExpression() == "0.")
     }
     // tests operand entry after a dot
-    func testGivenExpressionIsStarting_WhenEntriesAreOneDotPlus_ThenExpressionIsOneAndPlus() {
+    func testOperandEntryAfterDot() {
         // When
         addingToExpression("1 . +")
         // Then
         XCTAssert(calc.getExpression().elements() == ["1", "+"])
     }
-
     // tests useless numbers and dot when are at the end of a sequence
-    func testGivenExpressionIsStarting_WhenEntriesAreOneDotZeroZeroPlusZeroZeroDotSixZeroZeroZeroMinus_ThenExpressionElementsAreOneAndPlusAndZeroDotSixAndMinus() {
+    func testUselessNumbersAndDot() {
         // When
         addingToExpression("1 . 0 0 + 0 0 . 6 0 0 −")
         // Then
         XCTAssert(calc.getExpression().elements() == ["1", "+", "0.6", "−"])
     }
     // tests consecutive operands entries to change AND replace zero entry per numbers when is at the beginning of a sequence
-    func testGivenExpressionIsStarting_WhenEntriesAreOneMinusPlusZeroTwoThreeEqual_ThenExpressionElementsAreOneAndPlusAndTwoAndCarriageReturnEqualCarriageReturnAndTwentyFour() {
-        // When
+    func testConsecutiveOperandsEntriesAndZeroEntryBeforeNumber() {
         addingToExpression("1 . 2 − + 0 3")
-//        calc.resolveExpression()
-        // Then
         XCTAssert(calc.getExpression().elements() == ["1.2", "+", "3"])
     }
     // tests operands priorities
-    func testGivenExpressionIsStarting_WhenEntriesAreOnePlusOneMinusThreeMultiplyFiveDiviseEightEqual_ThenExpressionElementsAreOneAndPlusAndOneAndMinusAndThreeAndMultiplyAndFiveAndDiviseAndEightAndCarriageReturnEqualCarriageReturnAndZeroDotOneHundredTwentyFive() {
+    func testOperandsPriorities() {
         // When
         addingToExpression("1 + 1 − 3 × 5 ÷ 8")
         calc.resolveExpression()
@@ -71,7 +65,7 @@ class CalcTestCase: XCTestCase {
         XCTAssert(calc.getExpression().elements() == ["1", "+", "1", "−", "3", "×", "5", "÷", "8\r=\r0.125"])
     }
     // tests AC button
-    func testGivenExpressionIsStarting_WhenEntriesAreOnePlusTwoAC_ThenExpressionIsZero() {
+    func testACButton() {
         // When
         addingToExpression("1 + 2")
         calc.resetExpression()
@@ -79,7 +73,7 @@ class CalcTestCase: XCTestCase {
         XCTAssert(calc.getExpression() == "0")
     }
     // tests CE button when current sequence is a number
-    func testGivenExpressionIsStarting_WhenEntriesAreOnePlusTwoCE_ThenExpressionElementsAreOneAndPlus() {
+    func testCEButtonWhenCurrentSequenceIsNumber() {
         // When
         addingToExpression("1 + 2")
         calc.deleteLastSequence()
@@ -87,7 +81,7 @@ class CalcTestCase: XCTestCase {
         XCTAssert(calc.getExpression().elements() == ["1", "+"])
     }
     // tests CE button when current sequence is operand
-    func testGivenExpressionIsStarting_WhenEntriesAreOnePlusTwoPlusCE_ThenExpressionElementsAreOneAndPlusAndTwo() {
+    func testCEButtonWhenCurrentSequenceIsOperand() {
         // When
         addingToExpression("1 + 2 +")
         calc.deleteLastSequence()
@@ -95,7 +89,7 @@ class CalcTestCase: XCTestCase {
         XCTAssert(calc.getExpression().elements() == ["1", "+", "2"])
     }
     // tests CE button when current sequence is a number containing dot
-    func testGivenExpressionIsStarting_WhenEntriesAreOnePlusTwoDotCE_ThenExpressionElementsAreOneAndPlus() {
+    func testCEButtonWhenCurrentSequenceIsNumberAndDot() {
         // When
         addingToExpression("1 + 2 .")
         calc.deleteLastSequence()
@@ -103,7 +97,7 @@ class CalcTestCase: XCTestCase {
         XCTAssert(calc.getExpression().elements() == ["1", "+"])
     }
     // tests restarting expression when typing number after resolvation
-    func testGivenExpressionIsStarting_WhenEntriesAreOnePlusTwoEqualOne_ThenExpressionIsOne() {
+    func testRestartingExpressionWhenNumberEntryAfterResolvation() {
         // When
         addingToExpression("1 + 2")
         calc.resolveExpression()
@@ -111,5 +105,4 @@ class CalcTestCase: XCTestCase {
         // Then
         XCTAssert(calc.getExpression() == "1.")
     }
-
 }

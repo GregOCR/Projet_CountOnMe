@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     enum Button {
         case operands, equal
     }
-        
+    
     private var calc = Calc()
     
     private var expression = String() {
@@ -31,23 +31,12 @@ class ViewController: UIViewController {
         }
     }
     
-//    private var expressionElements: [String] {
-//        return self.expression.split(separator: " ").map { "\($0)" }
-//    }
-//
-//    private var currentSequence: String {
-//        return self.expressionElements.last!
-//    }
-//
-//    private var expressionHasEnoughElements: Bool {
-//        return self.expressionElements.count > 2
-//    }
     
     override internal func viewDidLoad() {
         super.viewDidLoad()
         
         calc.delegate = self // Calc class delegate
-
+        
         updateDataScreenCalculator()
         
         // gestures recognizer initializations
