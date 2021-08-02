@@ -31,7 +31,6 @@ class ViewController: UIViewController {
         }
     }
     
-    
     override internal func viewDidLoad() {
         super.viewDidLoad()
         
@@ -102,7 +101,6 @@ class ViewController: UIViewController {
         buttonAvailability(type: .operands, visibility: true)
         buttonAvailability(type: .equal, visibility: true)
         changeCEACbuttonTextTo("CE / AC")
-        
         if self.expression.currentSequence().isFloatZero() || self.expression.containsResult() {
             buttonAvailability(type: .operands, visibility: false)
         }

@@ -16,8 +16,6 @@ class Calc {
     
     weak internal var delegate: CalcDelegate?
     
-    private let operandsWithPriorities = ["÷", "×", "−", "+"]
-    
     private var expression = "0" {
         didSet {
             self.sendDataScreenCalculator()
@@ -27,6 +25,8 @@ class Calc {
     internal func getExpression() -> String {
         return self.expression
     }
+    
+    private let operandsWithPriorities = ["÷", "×", "−", "+"]
     
     internal func addToExpression(_ entry: String) {
         var verifiedEntry = entry
@@ -64,7 +64,7 @@ class Calc {
         
         while expressionToResolve.count != 1 { // while expression isn't counting 1 ...
             for operandIndex in 0...operandsWithPriorities.count-1 { // calculate it in the priority of operands
-                while (expressionToResolve.firstIndex(of: operandsWithPriorities[operandIndex]) != nil) {
+                while (expressionToResolve.firstIndex(of: operandsWithPriorities[operandIndex]) != nil) { // while there are operands in the expression
                     let leftIndex = expressionToResolve.firstIndex(of: operandsWithPriorities[operandIndex])!-1
                     let rightIndex = expressionToResolve.firstIndex(of: operandsWithPriorities[operandIndex])!+1
                     let leftNumber = expressionToResolve[leftIndex]

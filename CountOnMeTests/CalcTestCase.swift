@@ -19,7 +19,7 @@ class CalcTestCase: XCTestCase {
     }
     
     func addingToExpression(_ entries: String) {
-        let splitEntries = entries.split(separator: " ").map { "\($0)" }
+        let splitEntries = entries.split(separator: " ").map { String($0) }
         splitEntries.forEach( { calc.addToExpression($0) } )
     }
 
@@ -44,8 +44,8 @@ class CalcTestCase: XCTestCase {
         // Then
         XCTAssert(calc.getExpression().elements() == ["1", "+"])
     }
-    // tests useless numbers and dot when are at the end of a sequence
-    func testUselessNumbersAndDot() {
+    // tests useless numbers and operand when is at the end of a sequence
+    func testUselessNumbersAndOperandAtTheEnd() {
         // When
         addingToExpression("1 . 0 0 + 0 0 . 6 0 0 −")
         // Then
